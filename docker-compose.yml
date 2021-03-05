@@ -1,0 +1,11 @@
+version: '2'
+services: 
+        javaubuntu:
+                build:
+                       context: .
+                       dockerfile: Dockerfile.dev
+        zookeeper:
+                image: zookeeper:3.6.2
+                ports:
+                        - "2181:2181"
+                
