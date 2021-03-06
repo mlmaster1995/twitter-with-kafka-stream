@@ -2,17 +2,22 @@ version: '2'
 services: 
         zookeeper:
                 image: "zookeeper:3.6.2"
+                restart: always
+                volumes:
+                        - ./data-dir/zookeeper-data:/data
+                        - ./data-dir/zookeeper-datalog:/datalog  
                 ports:
                         - "2181:2181"
         broker1:
                 build:
-                        context: .
+                        context: ./broker1 
                         dockerfile: Dockerfile.dev
                         args:
                                 - zookeeper_connect=zookeeper:2181
+                volumes:
+                        - ./data-dir/kafka-logs-101:/tmp/kafka-logs
                 ports:
-                        - "9092:9092" 
-                
+                        - "9101:9101"
                 depends_on:
                         - zookeeper
 
