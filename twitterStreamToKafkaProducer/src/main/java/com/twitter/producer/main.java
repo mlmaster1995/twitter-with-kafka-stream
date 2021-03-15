@@ -24,7 +24,7 @@ public class main {
         TwitterStreamListener tweetStreamListener = new TwitterStreamListener();
         tweetStream.addListener(tweetStreamListener);
 
-        // samples the tweet based on the language
+        // samples the tweet based on the language and the track key words
         FilterQuery filterQuery = new FilterQuery();
         filterQuery.language(externalAppProps.getProperty("tweet.language"));
         filterQuery.track(externalAppProps.getProperty("tweet.track.list"));
