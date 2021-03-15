@@ -1,5 +1,6 @@
 package com.twitter.producer;
 
+import twitter4j.Status;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.Configuration;
@@ -8,6 +9,7 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Properties;
 
 public class TwitterKafkaProducerUtils {
@@ -25,10 +27,10 @@ public class TwitterKafkaProducerUtils {
         ConfigurationBuilder tweetConfigBuilder = new ConfigurationBuilder();
 
         tweetConfigBuilder.setDebugEnabled(true);
-        tweetConfigBuilder.setOAuthConsumerKey(props.getProperty("api_key"));
-        tweetConfigBuilder.setOAuthConsumerSecret(props.getProperty("api_secrete_key"));
-        tweetConfigBuilder.setOAuthAccessToken(props.getProperty("access_token"));
-        tweetConfigBuilder.setOAuthAccessTokenSecret(props.getProperty("access_token_secrete"));
+        tweetConfigBuilder.setOAuthConsumerKey(props.getProperty("api.key"));
+        tweetConfigBuilder.setOAuthConsumerSecret(props.getProperty("api.secrete.key"));
+        tweetConfigBuilder.setOAuthAccessToken(props.getProperty("access.token"));
+        tweetConfigBuilder.setOAuthAccessTokenSecret(props.getProperty("access.token.secrete"));
 
         return tweetConfigBuilder.build();
     }
@@ -38,6 +40,15 @@ public class TwitterKafkaProducerUtils {
         return new TwitterStreamFactory(config).getInstance();
     }
 
+    // extract tweet from the stream
+    public static TweetData extractTweetDataFromStream(Status tweetStatus){
+        Date tweetCreatedDate = tweetStatus.getCreatedAt();
+        Long tweetID = tweetStatus.getId();
+        String tweetText = tweetStatus.getText();
+        Long tweetUserID = tweetStatus.getUser().getId();
+        String tweetFullName = tweetStatus.getUser().getName() + "@" + tweetStatus.getUser().getScreenName();
 
+        return new TweetData(tweetCreatedDate,tweetID,tweetText,tweetUserID,tweetFullName);
+    }
 
 }

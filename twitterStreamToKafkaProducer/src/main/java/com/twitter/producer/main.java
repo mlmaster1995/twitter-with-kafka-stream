@@ -2,7 +2,6 @@ package com.twitter.producer;
 
 import twitter4j.*;
 import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Properties;
 
@@ -26,9 +25,10 @@ public class main {
         tweetStream.addListener(tweetStreamListener);
 
         // samples the tweet based on the language
-        tweetStream.sample(externalAppProps.getProperty("language"));
-
-
+        FilterQuery filterQuery = new FilterQuery();
+        filterQuery.language(externalAppProps.getProperty("tweet.language"));
+        filterQuery.track(externalAppProps.getProperty("tweet.track.list"));
+        tweetStream.filter(filterQuery);
 
     }
 }
