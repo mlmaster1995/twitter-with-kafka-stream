@@ -1,2 +1,3 @@
+com/twitter/producer/TwitterKafkaProducerUtils.class
 com/twitter/producer/main.class
-com/twitter/producer/AppUtils.class
+com/twitter/producer/TwitterStreamListener.class
