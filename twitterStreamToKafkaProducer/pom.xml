@@ -14,7 +14,7 @@
         <twitter4j-version>[4.0,)</twitter4j-version>
     </properties>
 
-    <!--must add this confluent package before add the dependenci-->
+    <!--must add this confluent package before add the dependency-->
     <repositories>
         <repository>
             <id>confluent</id>
