@@ -43,7 +43,6 @@ public class TwitterStreamListener extends StreamListener implements StatusListe
 
     @Override
     public void onStatus(Status status) {
-//        System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
         TwitterData twitterData = this.extractTweetDataFromStream(status);
         KafkaProducer jsonKafkaProducer = TwitterKafkaProducer.getStringKafkaProducer(this.props);
         this.sendTwitterJsonMessageToProducer(jsonKafkaProducer, twitterData);
