@@ -1,0 +1,18 @@
+//public Date tweetCreatedDate;
+//public Long tweetID;
+//public Long tweetUserID;
+//public String tweetText;
+//public String tweetFullName;
+//tweetCreatedDate.toString(),tweetID,tweetText,tweetUserID,tweetFullName
+
+{"namespace": "avro",
+  "type": "record",
+  "name": "TwitterAvroData",
+  "fields": [
+    {"name": "tweetCreatedDate", "type": "string"},
+    {"name": "tweetID",  "type": ["long", "null"]},
+    {"name": "tweetText", "type": ["string", "null"]},
+    {"name": "tweetUserID", "type": ["long", "null"]},
+    {"name": "tweetFullName", "type": ["string", "null"]}
+  ]
+}

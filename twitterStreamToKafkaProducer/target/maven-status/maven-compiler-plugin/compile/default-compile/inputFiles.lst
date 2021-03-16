@@ -1,6 +1,7 @@
 /home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/TwitterKafkaProducer.java
-/home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/TwitterData.java
 /home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/TwitterStreamListener.java
+/home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/TwitterJsonData.java
 /home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/main.java
+/home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/avro/TwitterAvroData.java
 /home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/StreamListener.java
 /home/ky/Documents/hadoop_training/Hadoop_Final_Review_Files/Big_Data_Git/twitter-with-kafka-stream/twitterStreamToKafkaProducer/src/main/java/com/twitter/producer/TwitterKafkaProducerUtils.java

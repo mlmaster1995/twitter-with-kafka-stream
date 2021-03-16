@@ -13,39 +13,40 @@ import twitter4j.StatusListener;
 import java.util.Date;
 import java.util.Properties;
 
-
 public class TwitterStreamListener extends StreamListener implements StatusListener{
     // constructor
     public TwitterStreamListener(Properties externalProps){this.props = externalProps;}
 
-    // extract tweet from the stream
-    private TwitterData extractTweetDataFromStream(Status tweetStatus){
+    // extract tweet from the stream to json data
+    private TwitterJsonData extractTweetDataFromStreamToJson(Status tweetStatus){
         Date tweetCreatedDate = tweetStatus.getCreatedAt();
         Long tweetID = tweetStatus.getId();
         String tweetText = tweetStatus.getText();
         Long tweetUserID = tweetStatus.getUser().getId();
         String tweetFullName = tweetStatus.getUser().getName() + "@" + tweetStatus.getUser().getScreenName();
 
-        return new TwitterData(tweetCreatedDate,tweetID,tweetText,tweetUserID,tweetFullName);
+        return new TwitterJsonData(tweetCreatedDate,tweetID,tweetText,tweetUserID,tweetFullName);
     }
 
-    // send tweet messages to the producer
-    private void sendTwitterJsonMessageToProducer(KafkaProducer<String, String> kafkaProducer, TwitterData twitterData){
-        Gson gson = new Gson();
-        String tweetJsonMessage = gson.toJson(twitterData);
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(this.props.getProperty("stream.topic"), Long.toString(twitterData.tweetID), tweetJsonMessage);
+    // extract tweet from the stream to avro data
+    private avro.TwitterAvroData extractTweetDataFromStreamToAvro(Status tweetStatus){
+        Date tweetCreatedDate = tweetStatus.getCreatedAt();
+        Long tweetID = tweetStatus.getId();
+        String tweetText = tweetStatus.getText();
+        Long tweetUserID = tweetStatus.getUser().getId();
+        String tweetFullName = tweetStatus.getUser().getName() + "@" + tweetStatus.getUser().getScreenName();
 
-        // send messages to kafka brokers in async model
-        try{kafkaProducer.send(producerRecord, new KafkaAsyncProducerCallback());}
-        catch(Exception e){e.printStackTrace();}
-        finally{kafkaProducer.close();}
+        return new avro.TwitterAvroData(tweetCreatedDate.toString(),tweetID,tweetText,tweetUserID,tweetFullName);
     }
 
     @Override
     public void onStatus(Status status) {
-        TwitterData twitterData = this.extractTweetDataFromStream(status);
-        KafkaProducer jsonKafkaProducer = TwitterKafkaProducer.getStringKafkaProducer(this.props);
-        this.sendTwitterJsonMessageToProducer(jsonKafkaProducer, twitterData);
+//        TwitterJsonData twitterJsonData = this.extractTweetDataFromStreamToJson(status);
+        avro.TwitterAvroData twitterAvroData = this.extractTweetDataFromStreamToAvro(status);
+//        KafkaProducer jsonKafkaProducer = TwitterKafkaProducer.getStringKafkaProducer(this.props);
+        KafkaProducer avroKafkaProducer = TwitterKafkaProducer.getAvroKafkaProducer(this.props);
+//        this.sendTwitterJsonMessageToProducer(jsonKafkaProducer, twitterJsonData);
+        TwitterKafkaProducer.sendTwitterAvroMessageToProducer(avroKafkaProducer, twitterAvroData, this.props);
     }
     @Override
     public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
@@ -60,13 +61,4 @@ public class TwitterStreamListener extends StreamListener implements StatusListe
 
 }
 
-class KafkaAsyncProducerCallback implements Callback{
-    @Override
-    public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-        if( e!=null) { e.printStackTrace(); }
-        else
-        {
-            System.out.println("record published to [partition:" + recordMetadata.partition() + ",offset:" + recordMetadata.offset() + "]");
-        }
-    }
-}
+

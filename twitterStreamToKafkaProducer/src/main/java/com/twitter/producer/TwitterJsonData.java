@@ -4,7 +4,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Date;
 
-public class TwitterData {
+public class TwitterJsonData {
     // field
     public Date tweetCreatedDate;
     public Long tweetID;
@@ -13,7 +13,7 @@ public class TwitterData {
     public String tweetFullName;
 
     // constructor
-    public TwitterData(Date tweetCreatedDate, Long tweetID, String tweetText, Long tweetUserID, String tweetFullName){
+    public TwitterJsonData(Date tweetCreatedDate, Long tweetID, String tweetText, Long tweetUserID, String tweetFullName){
         this.tweetCreatedDate=tweetCreatedDate;
         this.tweetID=tweetID;
         this.tweetText=tweetText;

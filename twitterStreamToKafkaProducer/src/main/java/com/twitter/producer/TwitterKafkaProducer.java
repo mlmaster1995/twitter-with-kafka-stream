@@ -1,11 +1,28 @@
 package com.twitter.producer;
 
+import com.google.gson.Gson;
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 
 import java.util.Properties;
 
+// kafka asyn producer callback
+class KafkaAsyncProducerCallback implements Callback {
+    @Override
+    public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+        if( e!=null) { e.printStackTrace(); }
+        else
+        {
+            System.out.println("record published to [partition:" + recordMetadata.partition() + ",offset:" + recordMetadata.offset() + "]");
+        }
+    }
+}
+
 public class TwitterKafkaProducer {
-    // methods
+
+    // get an instance of kafka producer with string serializer
     public static KafkaProducer<String, String> getStringKafkaProducer(Properties externalProps){
         Properties props = new Properties();
 
@@ -23,8 +40,46 @@ public class TwitterKafkaProducer {
         return new KafkaProducer<>(props);
     }
 
-    public static KafkaProducer<String, String> getAvroKafkaProducer(){
-        return null;
+    // get an instance of kafka producer with avro serializer
+    public static KafkaProducer<String, String> getAvroKafkaProducer(Properties externalProps){
+        Properties props = new Properties();
+
+        props.put("bootstrap.servers", externalProps.getProperty("bootstrap.servers"));
+        props.put("schema.registry.url", externalProps.getProperty("schema.registry.url"));
+        props.put("key.serializer", externalProps.getProperty("avro.key.serializer"));
+        props.put("value.serializer", externalProps.getProperty("avro.value.serializer"));
+        props.put("acks", externalProps.getProperty("acks"));
+        props.put("retries", externalProps.getProperty("retries"));
+        props.put("buffer.memory", externalProps.getProperty("buffer.memory"));
+        props.put("max.block.ms", externalProps.getProperty("max.block.ms"));
+        props.put("max.in.flight.req.conn", externalProps.getProperty("max.in.flight.req.conn"));
+        props.put("batch.size", externalProps.getProperty("batch.size"));
+        props.put("linger.ms", externalProps.getProperty("linger.ms"));
+
+        return new KafkaProducer<>(props);
+    }
+
+    // send tweet messages as json string to the producer
+    public static void sendTwitterJsonMessageToProducer(KafkaProducer<String, String> kafkaProducer, TwitterJsonData twitterJsonData, Properties props){
+        Gson gson = new Gson();
+        String tweetJsonMessage = gson.toJson(twitterJsonData);
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(props.getProperty("stream.topic"), Long.toString(twitterJsonData.tweetID), tweetJsonMessage);
+
+        // send messages to kafka brokers in async model
+        try{kafkaProducer.send(producerRecord, new KafkaAsyncProducerCallback());}
+        catch(Exception e){e.printStackTrace();}
+        finally{kafkaProducer.close();}
+    }
+
+    // send tweet messages as avro data to the producer
+    public static void sendTwitterAvroMessageToProducer(KafkaProducer<String, avro.TwitterAvroData> kafkaProducer, avro.TwitterAvroData twitterAvroData, Properties props){
+        ProducerRecord<String, avro.TwitterAvroData> producerRecord =
+                new ProducerRecord<>(props.getProperty("storage.topic"), Long.toString(twitterAvroData.getTweetID()), twitterAvroData);
+
+        // send messages to kafka brokers in async model
+        try{kafkaProducer.send(producerRecord, new KafkaAsyncProducerCallback());}
+        catch(Exception e){e.printStackTrace();}
+        finally{kafkaProducer.close();}
     }
 
 }

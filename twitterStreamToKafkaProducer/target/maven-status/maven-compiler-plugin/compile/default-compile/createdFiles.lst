@@ -1,7 +1,10 @@
+avro/TwitterAvroData$1.class
 com/twitter/producer/StreamListener.class
 com/twitter/producer/TwitterStreamListener.class
-com/twitter/producer/TwitterData.class
+avro/TwitterAvroData$Builder.class
 com/twitter/producer/KafkaAsyncProducerCallback.class
 com/twitter/producer/TwitterKafkaProducer.class
+avro/TwitterAvroData.class
 com/twitter/producer/TwitterKafkaProducerUtils.class
+com/twitter/producer/TwitterJsonData.class
 com/twitter/producer/main.class
