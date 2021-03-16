@@ -21,7 +21,7 @@ public class main {
         TwitterStream tweetStream = getTweetStream(tweetConfig);
 
         // add the tweet stream listener to the tweet stream
-        TwitterStreamListener tweetStreamListener = new TwitterStreamListener();
+        TwitterStreamListener tweetStreamListener = new TwitterStreamListener(externalAppProps);
         tweetStream.addListener(tweetStreamListener);
 
         // samples the tweet based on the language and the track key words

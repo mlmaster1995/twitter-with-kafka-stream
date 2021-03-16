@@ -1,6 +1,5 @@
 package com.twitter.producer;
 
-import twitter4j.Status;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.Configuration;
@@ -9,7 +8,6 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.Properties;
 
 public class TwitterKafkaProducerUtils {
@@ -22,7 +20,7 @@ public class TwitterKafkaProducerUtils {
         return prop;
     }
 
-    // get twitter utils
+    // get twitter config
     public static Configuration getTweetConfig(Properties props){
         ConfigurationBuilder tweetConfigBuilder = new ConfigurationBuilder();
 
@@ -35,20 +33,9 @@ public class TwitterKafkaProducerUtils {
         return tweetConfigBuilder.build();
     }
 
-    // get tweet stream
+    // get tweet stream instance with the config
     public static TwitterStream getTweetStream(Configuration config){
         return new TwitterStreamFactory(config).getInstance();
-    }
-
-    // extract tweet from the stream
-    public static TweetData extractTweetDataFromStream(Status tweetStatus){
-        Date tweetCreatedDate = tweetStatus.getCreatedAt();
-        Long tweetID = tweetStatus.getId();
-        String tweetText = tweetStatus.getText();
-        Long tweetUserID = tweetStatus.getUser().getId();
-        String tweetFullName = tweetStatus.getUser().getName() + "@" + tweetStatus.getUser().getScreenName();
-
-        return new TweetData(tweetCreatedDate,tweetID,tweetText,tweetUserID,tweetFullName);
     }
 
 }

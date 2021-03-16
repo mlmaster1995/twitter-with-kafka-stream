@@ -4,12 +4,9 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 
 import java.util.Properties;
 
-public class TweetKafkaProducer {
-    // constructor
-    public TweetKafkaProducer(){}
-
+public class TwitterKafkaProducer {
     // methods
-    public KafkaProducer<String, String> getJsonKafkaProducer(Properties externalProps){
+    public static KafkaProducer<String, String> getStringKafkaProducer(Properties externalProps){
         Properties props = new Properties();
 
         props.put("bootstrap.servers", externalProps.getProperty("bootstrap.servers"));
@@ -26,8 +23,7 @@ public class TweetKafkaProducer {
         return new KafkaProducer<>(props);
     }
 
-    public KafkaProducer<String, String> getAvroKafkaProducer(){
-        ????
+    public static KafkaProducer<String, String> getAvroKafkaProducer(){
         return null;
     }
 

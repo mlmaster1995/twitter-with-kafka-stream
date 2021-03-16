@@ -1,3 +1,7 @@
+com/twitter/producer/StreamListener.class
+com/twitter/producer/TwitterStreamListener.class
+com/twitter/producer/TwitterData.class
+com/twitter/producer/KafkaAsyncProducerCallback.class
+com/twitter/producer/TwitterKafkaProducer.class
 com/twitter/producer/TwitterKafkaProducerUtils.class
 com/twitter/producer/main.class
-com/twitter/producer/TwitterStreamListener.class
