@@ -14,8 +14,8 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -846438583993839866L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TwitterAvroData\",\"namespace\":\"avro\",\"fields\":[{\"name\":\"tweetCreatedDate\",\"type\":\"string\"},{\"name\":\"tweetID\",\"type\":[\"long\",\"null\"]},{\"name\":\"tweetText\",\"type\":[\"string\",\"null\"]},{\"name\":\"tweetUserID\",\"type\":[\"long\",\"null\"]},{\"name\":\"tweetFullName\",\"type\":[\"string\",\"null\"]}]}");
+  private static final long serialVersionUID = -634073007043555287L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TwitterAvroData\",\"namespace\":\"avro\",\"fields\":[{\"name\":\"tweetCreatedDate\",\"type\":\"string\"},{\"name\":\"tweetID\",\"type\":[\"long\",\"null\"]},{\"name\":\"tweetText\",\"type\":[\"string\",\"null\"]},{\"name\":\"tweetUserID\",\"type\":[\"long\",\"null\"]},{\"name\":\"tweetFullName\",\"type\":[\"string\",\"null\"]},{\"name\":\"tweetRelatedTopic\",\"type\":[\"string\",\"null\"]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -76,6 +76,7 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
    private java.lang.CharSequence tweetText;
    private java.lang.Long tweetUserID;
    private java.lang.CharSequence tweetFullName;
+   private java.lang.CharSequence tweetRelatedTopic;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -91,13 +92,15 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
    * @param tweetText The new value for tweetText
    * @param tweetUserID The new value for tweetUserID
    * @param tweetFullName The new value for tweetFullName
+   * @param tweetRelatedTopic The new value for tweetRelatedTopic
    */
-  public TwitterAvroData(java.lang.CharSequence tweetCreatedDate, java.lang.Long tweetID, java.lang.CharSequence tweetText, java.lang.Long tweetUserID, java.lang.CharSequence tweetFullName) {
+  public TwitterAvroData(java.lang.CharSequence tweetCreatedDate, java.lang.Long tweetID, java.lang.CharSequence tweetText, java.lang.Long tweetUserID, java.lang.CharSequence tweetFullName, java.lang.CharSequence tweetRelatedTopic) {
     this.tweetCreatedDate = tweetCreatedDate;
     this.tweetID = tweetID;
     this.tweetText = tweetText;
     this.tweetUserID = tweetUserID;
     this.tweetFullName = tweetFullName;
+    this.tweetRelatedTopic = tweetRelatedTopic;
   }
 
   public org.apache.avro.specific.SpecificData getSpecificData() { return MODEL$; }
@@ -110,6 +113,7 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
     case 2: return tweetText;
     case 3: return tweetUserID;
     case 4: return tweetFullName;
+    case 5: return tweetRelatedTopic;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -123,6 +127,7 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
     case 2: tweetText = (java.lang.CharSequence)value$; break;
     case 3: tweetUserID = (java.lang.Long)value$; break;
     case 4: tweetFullName = (java.lang.CharSequence)value$; break;
+    case 5: tweetRelatedTopic = (java.lang.CharSequence)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -213,6 +218,23 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
   }
 
   /**
+   * Gets the value of the 'tweetRelatedTopic' field.
+   * @return The value of the 'tweetRelatedTopic' field.
+   */
+  public java.lang.CharSequence getTweetRelatedTopic() {
+    return tweetRelatedTopic;
+  }
+
+
+  /**
+   * Sets the value of the 'tweetRelatedTopic' field.
+   * @param value the value to set.
+   */
+  public void setTweetRelatedTopic(java.lang.CharSequence value) {
+    this.tweetRelatedTopic = value;
+  }
+
+  /**
    * Creates a new TwitterAvroData RecordBuilder.
    * @return A new TwitterAvroData RecordBuilder
    */
@@ -258,6 +280,7 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
     private java.lang.CharSequence tweetText;
     private java.lang.Long tweetUserID;
     private java.lang.CharSequence tweetFullName;
+    private java.lang.CharSequence tweetRelatedTopic;
 
     /** Creates a new Builder */
     private Builder() {
@@ -290,6 +313,10 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
         this.tweetFullName = data().deepCopy(fields()[4].schema(), other.tweetFullName);
         fieldSetFlags()[4] = other.fieldSetFlags()[4];
       }
+      if (isValidValue(fields()[5], other.tweetRelatedTopic)) {
+        this.tweetRelatedTopic = data().deepCopy(fields()[5].schema(), other.tweetRelatedTopic);
+        fieldSetFlags()[5] = other.fieldSetFlags()[5];
+      }
     }
 
     /**
@@ -317,6 +344,10 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
       if (isValidValue(fields()[4], other.tweetFullName)) {
         this.tweetFullName = data().deepCopy(fields()[4].schema(), other.tweetFullName);
         fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.tweetRelatedTopic)) {
+        this.tweetRelatedTopic = data().deepCopy(fields()[5].schema(), other.tweetRelatedTopic);
+        fieldSetFlags()[5] = true;
       }
     }
 
@@ -520,6 +551,46 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
       return this;
     }
 
+    /**
+      * Gets the value of the 'tweetRelatedTopic' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getTweetRelatedTopic() {
+      return tweetRelatedTopic;
+    }
+
+
+    /**
+      * Sets the value of the 'tweetRelatedTopic' field.
+      * @param value The value of 'tweetRelatedTopic'.
+      * @return This builder.
+      */
+    public avro.TwitterAvroData.Builder setTweetRelatedTopic(java.lang.CharSequence value) {
+      validate(fields()[5], value);
+      this.tweetRelatedTopic = value;
+      fieldSetFlags()[5] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'tweetRelatedTopic' field has been set.
+      * @return True if the 'tweetRelatedTopic' field has been set, false otherwise.
+      */
+    public boolean hasTweetRelatedTopic() {
+      return fieldSetFlags()[5];
+    }
+
+
+    /**
+      * Clears the value of the 'tweetRelatedTopic' field.
+      * @return This builder.
+      */
+    public avro.TwitterAvroData.Builder clearTweetRelatedTopic() {
+      tweetRelatedTopic = null;
+      fieldSetFlags()[5] = false;
+      return this;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public TwitterAvroData build() {
@@ -530,6 +601,7 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
         record.tweetText = fieldSetFlags()[2] ? this.tweetText : (java.lang.CharSequence) defaultValue(fields()[2]);
         record.tweetUserID = fieldSetFlags()[3] ? this.tweetUserID : (java.lang.Long) defaultValue(fields()[3]);
         record.tweetFullName = fieldSetFlags()[4] ? this.tweetFullName : (java.lang.CharSequence) defaultValue(fields()[4]);
+        record.tweetRelatedTopic = fieldSetFlags()[5] ? this.tweetRelatedTopic : (java.lang.CharSequence) defaultValue(fields()[5]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -596,6 +668,14 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
       out.writeString(this.tweetFullName);
     }
 
+    if (this.tweetRelatedTopic == null) {
+      out.writeIndex(1);
+      out.writeNull();
+    } else {
+      out.writeIndex(0);
+      out.writeString(this.tweetRelatedTopic);
+    }
+
   }
 
   @Override public void customDecode(org.apache.avro.io.ResolvingDecoder in)
@@ -633,8 +713,15 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
         this.tweetFullName = in.readString(this.tweetFullName instanceof Utf8 ? (Utf8)this.tweetFullName : null);
       }
 
+      if (in.readIndex() != 0) {
+        in.readNull();
+        this.tweetRelatedTopic = null;
+      } else {
+        this.tweetRelatedTopic = in.readString(this.tweetRelatedTopic instanceof Utf8 ? (Utf8)this.tweetRelatedTopic : null);
+      }
+
     } else {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < 6; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           this.tweetCreatedDate = in.readString(this.tweetCreatedDate instanceof Utf8 ? (Utf8)this.tweetCreatedDate : null);
@@ -673,6 +760,15 @@ public class TwitterAvroData extends org.apache.avro.specific.SpecificRecordBase
             this.tweetFullName = null;
           } else {
             this.tweetFullName = in.readString(this.tweetFullName instanceof Utf8 ? (Utf8)this.tweetFullName : null);
+          }
+          break;
+
+        case 5:
+          if (in.readIndex() != 0) {
+            in.readNull();
+            this.tweetRelatedTopic = null;
+          } else {
+            this.tweetRelatedTopic = in.readString(this.tweetRelatedTopic instanceof Utf8 ? (Utf8)this.tweetRelatedTopic : null);
           }
           break;
 

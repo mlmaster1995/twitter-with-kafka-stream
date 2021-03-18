@@ -13,6 +13,7 @@
     {"name": "tweetID",  "type": ["long", "null"]},
     {"name": "tweetText", "type": ["string", "null"]},
     {"name": "tweetUserID", "type": ["long", "null"]},
-    {"name": "tweetFullName", "type": ["string", "null"]}
+    {"name": "tweetFullName", "type": ["string", "null"]},
+    {"name": "tweetRelatedTopic", "type": ["string", "null"]}
   ]
 }

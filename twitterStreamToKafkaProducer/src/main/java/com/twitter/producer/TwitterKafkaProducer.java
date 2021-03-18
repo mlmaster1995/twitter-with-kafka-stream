@@ -62,24 +62,49 @@ public class TwitterKafkaProducer {
     // send tweet messages as json string to the producer
     public static void sendTwitterJsonMessageToProducer(KafkaProducer<String, String> kafkaProducer, TwitterJsonData twitterJsonData, Properties props){
         Gson gson = new Gson();
-        String tweetJsonMessage = gson.toJson(twitterJsonData);
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(props.getProperty("stream.topic"), Long.toString(twitterJsonData.tweetID), tweetJsonMessage);
+        ProducerRecord<String, String> producerRecord = null;
+
+        // filter the messages bofore sending to kafka
+        String[] topicList = props.getProperty("tweet.track.list").split(",");
+        for(String topic: topicList) {
+            if(twitterJsonData.tweetText.contains(topic)){
+                // generate kafka producer record
+                String tweetJsonMessage = gson.toJson(twitterJsonData);
+                producerRecord = new ProducerRecord<>(props.getProperty("stream.topic"), Long.toString(twitterJsonData.tweetID), tweetJsonMessage);
+                break;
+            }
+        }
 
         // send messages to kafka brokers in async model
-        try{kafkaProducer.send(producerRecord, new KafkaAsyncProducerCallback());}
-        catch(Exception e){e.printStackTrace();}
-        finally{kafkaProducer.close();}
+        if(producerRecord!=null){
+            try{kafkaProducer.send(producerRecord, new KafkaAsyncProducerCallback());}
+            catch(Exception e){e.printStackTrace();}
+            finally{kafkaProducer.close();}
+        }
+        else System.out.println("....message is useless and disposed....");
     }
 
     // send tweet messages as avro data to the producer
     public static void sendTwitterAvroMessageToProducer(KafkaProducer<String, avro.TwitterAvroData> kafkaProducer, avro.TwitterAvroData twitterAvroData, Properties props){
-        ProducerRecord<String, avro.TwitterAvroData> producerRecord =
-                new ProducerRecord<>(props.getProperty("storage.topic"), Long.toString(twitterAvroData.getTweetID()), twitterAvroData);
+        ProducerRecord<String, avro.TwitterAvroData> producerRecord = null;
+
+        // filter the messages bofore sending to kafka
+        String[] topicList = props.getProperty("tweet.track.list").split(",");
+        for(String topic: topicList) {
+            if(twitterAvroData.getTweetText().toString().contains(topic)){
+                // generate kafka producer record
+                twitterAvroData.setTweetRelatedTopic(topic);
+                producerRecord = new ProducerRecord<>(props.getProperty("storage.topic"), twitterAvroData.getTweetRelatedTopic().toString(), twitterAvroData);
+                break;
+            }
+        }
 
         // send messages to kafka brokers in async model
-        try{kafkaProducer.send(producerRecord, new KafkaAsyncProducerCallback());}
-        catch(Exception e){e.printStackTrace();}
-        finally{kafkaProducer.close();}
+        if(producerRecord!=null){
+            try{kafkaProducer.send(producerRecord, new KafkaAsyncProducerCallback());}
+            catch(Exception e){e.printStackTrace();}
+            finally{kafkaProducer.close();}
+        }
+        else System.out.println("....message is useless and disposed....");
     }
-
 }
