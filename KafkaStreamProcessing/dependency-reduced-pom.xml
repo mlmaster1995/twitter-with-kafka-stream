@@ -35,7 +35,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.twitter.producer.main</mainClass>
+                  <mainClass>com.kafka.stream.process.main</mainClass>
                 </transformer>
               </transformers>
             </configuration>

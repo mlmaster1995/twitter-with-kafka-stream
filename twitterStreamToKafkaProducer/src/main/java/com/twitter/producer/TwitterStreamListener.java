@@ -1,10 +1,6 @@
 package com.twitter.producer;
 
-import com.google.gson.Gson;
-import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
@@ -14,8 +10,11 @@ import java.util.Date;
 import java.util.Properties;
 
 public class TwitterStreamListener extends StreamListener implements StatusListener{
+    // fields
+    private Properties props;
+
     // constructor
-    public TwitterStreamListener(Properties externalProps){this.props = externalProps;}
+    public TwitterStreamListener(Properties externalProps){ this.props= externalProps;}
 
     // extract tweet from the stream to json data
     private TwitterJsonData extractTweetDataFromStreamToJson(Status tweetStatus){
@@ -39,13 +38,19 @@ public class TwitterStreamListener extends StreamListener implements StatusListe
         return new avro.TwitterAvroData(tweetCreatedDate.toString(),tweetID,tweetText,tweetUserID,tweetFullName);
     }
 
+    // override statusListener interface
     @Override
     public void onStatus(Status status) {
-//        TwitterJsonData twitterJsonData = this.extractTweetDataFromStreamToJson(status);
-        avro.TwitterAvroData twitterAvroData = this.extractTweetDataFromStreamToAvro(status);
-//        KafkaProducer jsonKafkaProducer = TwitterKafkaProducer.getStringKafkaProducer(this.props);
+        // extract same tweet data in both Json and Avro format
+        TwitterJsonData twitterJsonData = extractTweetDataFromStreamToJson(status);
+        avro.TwitterAvroData twitterAvroData = extractTweetDataFromStreamToAvro(status);
+
+        // get kafka producer instances for both Json and Avro format
+        KafkaProducer jsonKafkaProducer = TwitterKafkaProducer.getStringKafkaProducer(this.props);
         KafkaProducer avroKafkaProducer = TwitterKafkaProducer.getAvroKafkaProducer(this.props);
-//        this.sendTwitterJsonMessageToProducer(jsonKafkaProducer, twitterJsonData);
+
+        // write data to stream.topic and storage.topic for both stream process and hdfs storage
+        TwitterKafkaProducer.sendTwitterJsonMessageToProducer(jsonKafkaProducer, twitterJsonData, this.props);
         TwitterKafkaProducer.sendTwitterAvroMessageToProducer(avroKafkaProducer, twitterAvroData, this.props);
     }
     @Override
@@ -58,7 +63,6 @@ public class TwitterStreamListener extends StreamListener implements StatusListe
     public void onStallWarning(StallWarning warning) {}
     @Override
     public void onException(Exception ex) { ex.printStackTrace(); }
-
 }
 
 
