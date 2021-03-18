@@ -81,7 +81,7 @@ public class TwitterKafkaProducer {
             catch(Exception e){e.printStackTrace();}
             finally{kafkaProducer.close();}
         }
-        else System.out.println("....message is useless and disposed....");
+        else System.out.println("....message is unrelated and disposed....");
     }
 
     // send tweet messages as avro data to the producer
@@ -105,6 +105,6 @@ public class TwitterKafkaProducer {
             catch(Exception e){e.printStackTrace();}
             finally{kafkaProducer.close();}
         }
-        else System.out.println("....message is useless and disposed....");
+        else System.out.println("....message is unrelated and disposed....");
     }
 }

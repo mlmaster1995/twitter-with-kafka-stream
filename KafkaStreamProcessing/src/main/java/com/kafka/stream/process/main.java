@@ -53,7 +53,8 @@ public class main {
                         .groupByKey()
                         .windowedBy(TimeWindows.of(windowSize).advanceBy(windowSize))
                         .count();
-        KStream<String, Long> streamProcessed = aggTableWithTopicKey.toStream((stringWindowed, aLong) -> {return stringWindowed.toString();});
+        KStream<String, Long> streamProcessed = aggTableWithTopicKey.toStream(
+                (stringWindowed, aLong) -> {return "["+ stringWindowed.key() + "@" + stringWindowed.window().startTime() + "-" + stringWindowed.window().endTime() + "]";});
 
         streamProcessed.to(props.getProperty("sink.topic"), Produced.with(stringSerde, longSerde));
 
