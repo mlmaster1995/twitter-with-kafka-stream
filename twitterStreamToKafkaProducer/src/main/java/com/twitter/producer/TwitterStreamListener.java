@@ -35,7 +35,7 @@ public class TwitterStreamListener extends StreamListener implements StatusListe
         Long tweetUserID = tweetStatus.getUser().getId();
         String tweetFullName = tweetStatus.getUser().getName() + "@" + tweetStatus.getUser().getScreenName();
 
-        return new avro.TwitterAvroData(tweetCreatedDate.toString(),tweetID,tweetText,tweetUserID,tweetFullName);
+        return new avro.TwitterAvroData(tweetCreatedDate.toString(),tweetID,tweetText,tweetUserID,tweetFullName,"");
     }
 
     // override statusListener interface
