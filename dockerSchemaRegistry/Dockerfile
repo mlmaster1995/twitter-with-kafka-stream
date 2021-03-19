@@ -7,8 +7,8 @@ RUN apt-get install wget -y
 RUN apt-get install openjdk-8-jdk -y  
 
 # install schema registry
-ARG confluent_folder=confluent-community-6.1.0
-ARG confluent_tar_folder=${confluent_folder}.tar.gz
+ARG confluent_folder=confluent-6.1.0
+ARG confluent_tar_folder=confluent-community-6.1.0.tar.gz
 ARG confluent_version=6.1
 ARG confluent_community_url=http://packages.confluent.io/archive/${confluent_version}/${confluent_tar_folder}
 
