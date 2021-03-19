@@ -1,19 +1,22 @@
 ARG tag=20.04
 FROM ubuntu:${tag}
 
-
 # install dependencies
 RUN apt-get update -y
-RUN apt-get install vim -y
 RUN apt-get install wget -y
 RUN apt-get install openjdk-8-jdk -y  
 
 # install schema registry
-ARG conf_folder=confluent-community-components
-ARG schema_path=${conf_folder}/etc/schema-registry
+ARG confluent_folder=confluent-community-6.1.0
+ARG confluent_tar_folder=${confluent_folder}.tar.gz
+ARG confluent_version=6.1
+ARG confluent_community_url=http://packages.confluent.io/archive/${confluent_version}/${confluent_tar_folder}
 
 WORKDIR /opt/
-COPY ./${conf_folder} ./
+
+RUN wget ${confluent_community_url}
+RUN tar -xvzf ./${confluent_tar_folder}
+RUN rm ./${confluent_tar_folder}
 
 # config schema registry and connect props
 ARG connect_props_file=connect-avro-standalone.properties
@@ -25,11 +28,17 @@ ENV SCHEMA_PROPS_FILE=${schema_props_file}
 ARG kafka_broker_connect
 ENV KAFKA_BROKER_CONNECT=${kafka_broker_connect}
 
-RUN echo "kafkastore.bootstrap.servers=PLAINTEXT://${kafka_broker_connect}" >> ./etc/schema-registry/${schema_props_file}
+WORKDIR /opt/${confluent_folder}/etc/schema-registry/
 
-RUN echo "bootstrap.servers=${kafka_broker_connect}" >> ./etc/schema-registry/${connect_props_file}
+COPY ./${schema_props_file} ${connect_props_file} ./ 
+
+RUN echo "kafkastore.bootstrap.servers=PLAINTEXT://${kafka_broker_connect}" >> ./${schema_props_file}
+
+RUN echo "bootstrap.servers=${kafka_broker_connect}" >> ./${connect_props_file}
 
 # start schema registry
+WORKDIR /opt/${confluent_folder}
+
 COPY ./start-schema-registry.sh ./
 
 RUN chmod a+x ./*sh
