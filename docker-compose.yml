@@ -1,0 +1,39 @@
+version: '2'
+services: 
+        zookeeper1:
+                image: "zookeeper:3.6.2"
+                restart: always
+                hostname: zookeeper1
+                volumes:
+                        - ./data-dir/zookeeper-data-1:/data
+                        - ./data-dir/zookeeper-datalog-1:/datalog  
+                ports:
+                        - "2181:2181"
+
+        broker1:
+                build:
+                        context: ./dockerKafka 
+                        dockerfile: Dockerfile
+                        args:
+                                zookeeper_connect: zookeeper1:2181
+                links: 
+                        - "zookeeper1"
+                volumes:
+                        - ./data-dir/kafka-logs-101:/tmp/kafka-logs
+                ports:
+                        - "9101:9101"
+                depends_on:
+                        - zookeeper1
+        
+        schema-registry:
+                build:
+                        context: ./dockerSchemaRegistry
+                        dockerfile: Dockerfile
+                        args:
+                                kafka_broker_connect: broker1:9101
+                links:
+                        - "broker1"
+                ports:
+                        - "8081:8081"
+                depends_on:
+                        - broker1
