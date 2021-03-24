@@ -1,14 +1,13 @@
 package com.kafkaStream.cassandra;
 
+import com.datastax.driver.core.Session;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
-import javax.xml.crypto.Data;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,12 +38,32 @@ public class main {
         KafkaConsumer<String, Long> consumer = new KafkaConsumer<String, Long>(props);
         consumer.subscribe(Arrays.asList(consumerTopic));
 
+        // create connection and session of the cassandra database
+        CassandraConnect connect = new CassandraConnect();
+        connect.connectToCluster(props.getProperty("cassandra.node.url"));
+        Session session = connect.getSession();
+
         // starts to consume message
         try{
+            // execute keyspace and table creation for further data sinking
+            String keySpaceQuery = new StringBuilder("CREATE KEYSPACE IF NOT EXISTS ").append(props.getProperty("cassandra.key.space")).append(" WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 };").toString();
+            session.execute(keySpaceQuery);
+
+            String tableName = props.getProperty("cassandra.key.space") + "." + props.getProperty("cassandra.table");
+            String createTableQuery = new StringBuilder("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(local_timestamp timestamp, kafka_topic TEXT, tweet_topic TEXT, tweet_topic_count BIGINT, PRIMARY KEY (tweet_topic))").toString();
+            session.execute(createTableQuery);
+
+            String insertTableQuery = new StringBuilder("INSERT INTO ").append(tableName).append(" (local_timestamp, kafka_topic, tweet_topic, tweet_topic_count) values (?,?,?,?)").toString();
+
+            // write data to cassandra and kafka consumer console
             while(true){
                 ConsumerRecords<String, Long> records = consumer.poll(Duration.ofSeconds(10));
                 for(ConsumerRecord<String, Long> record: records){
+                    // print to console
                     System.out.println("TIMESTAMP:" + new Date(record.timestamp())+","+"TOPIC:"+record.topic()+","+"KEY:"+record.key()+","+"VALUE:"+ record.value().toString());
+
+                    // write to cassandra
+                    session.execute(insertTableQuery, new Date(record.timestamp()), record.topic(), record.key(), record.value());
                 }
             }
         }
@@ -53,6 +72,7 @@ public class main {
         }
         finally{
             consumer.close();
+            connect.closeCassandraCollect();
         }
     }
 }

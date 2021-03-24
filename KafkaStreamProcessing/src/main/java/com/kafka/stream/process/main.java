@@ -35,13 +35,12 @@ public class main {
 
         // declare the topology params
         String[] topicList = props.getProperty("tweet.track.list").split(",");
-        Duration windowSize = Duration.ofMinutes(2);
+        Duration windowSize = Duration.ofMinutes(Integer.parseInt(props.getProperty("stateful.process.hopping.window")));
         Serdes.StringSerde stringSerde = new Serdes.StringSerde();
         Serdes.LongSerde longSerde = new Serdes.LongSerde();
 
         // build the stream topology
         StreamsBuilder builder = new StreamsBuilder();
-
         KStream<String, String> streamSource = builder.stream(props.getProperty("stream.topic"));
         KTable<Windowed<String>, Long> aggTableWithTopicKey =
                 streamSource

@@ -1,1 +1,2 @@
 com/kafkaStream/cassandra/main.class
+com/kafkaStream/cassandra/CassandraConnect.class
