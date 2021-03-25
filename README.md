@@ -1,4 +1,4 @@
-## Tweet Topic Tracking Pipeline with Lambda Architecture
+# Tweet Topic Tracking Pipeline with Lambda Architecture
 ![Hex.pm](https://img.shields.io/hexpm/l/plug?logo=Apache&logoColor=%23ff0000&style=flat-square)
 
 ### Table of Contents
@@ -13,22 +13,10 @@
 * [Contact](#contact)
 
 ### About The Project
-I. This is a small project to leverage the benefits of Apache Kafka realizing the stateful processing and the direct storage via ```Kafka Stream```, ```Kafka Connect``` 
-and ```Kafka Producer & Consumer API```. 
-  
-
-II. Different from [ETL(Extract Transform Load) Data Pipeline Collection OOP](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated) project, this project 
+This is a small project to leverage the benefits of Apache Kafka realizing the stateful processing and the direct storage via ```Kafka Stream```, ```Kafka Connect``` 
+and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform Load) Data Pipeline Collection OOP](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated) project, this project 
   is not a combination of multiple point-to-point data pipelines, BUT a tweet stream pipeline based on ```Lambda Architecture``` which includes the batch layer, and the real-time 
-  stateful processing layer for further down-stream process in the serving layer. 
-  
-
-III. The batch layer uses ```Kafka HDFS Connect``` and ```Confluent Schema Registry``` ingesting tweet stream with ```Avro Schema``` into ```Hadoop system``` directly. The same stream source
-  is processed based on the user-defined topics with ```Json Schema``` via ```Kafka Stream``` saving the data into ```Cassandra database```. 
-  
-
-IV. The 2nd upgrade comparing to the [previous project](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated), this project is developed as an OOP in Java and 
-the compiled jar files of different component of the pipeline are generated. All properties related to the pipeline could be configured via a property file and it's easy to reuse the pipeline
-in any configured big data environment. 
+  stateful processing layer for further down-stream process in the serving layer.
 
 V. This project is developed and tested in the self-configured VM with related technologies as [Built With](#built-with). 
 
@@ -100,6 +88,7 @@ the data saved in Cassandra.
 the tweet messages from API has not any related keywords defined in ```tweet-message-trending-pipeline.properties```, but the related messages are pulished to the cluster.  
 
 
+    |-------------------------------------------|
     |....message is unrelated and disposed....  |
     |....message is unrelated and disposed....  |
     |record published to [partition:2,offset:33]|
@@ -112,17 +101,18 @@ the tweet messages from API has not any related keywords defined in ```tweet-mes
 
     
 
-    |    tweetCreatedDate|            tweetID|           tweetText|        tweetUserID|       tweetFullName|tweetRelatedTopic|
-    |--------------------|-------------------|--------------------|-------------------|--------------------|-----------------|
-    |Thu Mar 18 10:55:...|        ...        |RT @TechnicalGuru...|                ...|   Am*d@amid********|               5G|
-    |Thu Mar 18 11:00:...|        ...        |In both public an...|                ...|                 ...|    CyberSecurity|
-    |Thu Mar 18 11:00:...|13*2563688117*684*4|$KEYS 📰 Keysight.. |                ...|                 ...|               5G|
+    |    tweetCreatedDate|            tweetID|           tweetText|tweetUserID|       tweetFullName|tweetRelatedTopic|
+    |--------------------|-------------------|--------------------|-----------|--------------------|-----------------|
+    |Thu Mar 18 10:55:...|        ...        |RT @TechnicalGuru...|        ...|   Am*d@amid********|               5G|
+    |Thu Mar 18 11:00:...|        ...        |In both public an...|        ...|                 ...|    CyberSecurity|
+    |Thu Mar 18 11:00:...|13*2563688117*684*4|$KEYS 📰 Keysight.. |        ...|                 ...|               5G|
  
 
 
 * Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> kafka console
 
 
+    |---------------------------------------------------------------------------------------------------------------------------------------------|
     |TIMESTAMP:Thu Mar 25 11:29:44 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:1                      |
     |TIMESTAMP:Thu Mar 25 11:29:47 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:2                      |
     |TIMESTAMP:Thu Mar 25 11:29:47 EDT 2021,TOPIC:processedStream,KEY:[Artificial Intelligence@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:1 |
@@ -137,7 +127,7 @@ the tweet messages from API has not any related keywords defined in ```tweet-mes
 
 
     |tweet_topic                                                         | kafka_topic     | local_timestamp                 | tweet_topic_count |
-    |--------------------------------------------------------------------+-----------------+---------------------------------+-------------------|
+    |--------------------------------------------------------------------|-----------------|---------------------------------|-------------------|
     |[CyberSecurity@2021-03-24T15:34:00Z-2021-03-24T15:36:00Z]           | processedStream | 2021-03-24 15:34:15.997000+0000 |                 2 |
     |[5G@2021-03-24T15:26:00Z-2021-03-24T15:28:00Z]                      | processedStream | 2021-03-24 15:27:41.766000+0000 |                 1 |
     |[CyberSecurity@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z]           | processedStream | 2021-03-25 15:29:57.712000+0000 |                 1 |
