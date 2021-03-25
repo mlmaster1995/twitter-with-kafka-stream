@@ -14,7 +14,7 @@
 
 ### About The Project
 I. This is a small project to leverage the benefits of Apache Kafka realizing the stateful processing and the direct storage via ```Kafka Stream```, ```Kafka Connect``` 
-and ```Kafka Producer, Consumer API```. 
+and ```Kafka Producer & Consumer API```. 
   
 
 II. Different from [ETL(Extract Transform Load) Data Pipeline Collection OOP](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated) project, this project 
@@ -66,7 +66,7 @@ the popularity of the trending technology in the tweet. The processed data is sa
 #### Pipeline Use:
 **NOTE**: to compile and generate jars of pipeline component, go to the app folder run ```mvn clean install``` for the compile and jar generation. 
 
-I. Set up the pipeline properties in the file ```tweet-message-trending-pipeline.properties``` and this file includes all props needed by the pipeline such as kafka topics, tweeter developer API
+I. Set up the pipeline properties in the file ```tweet-message-trending-pipeline.properties``` and this file includes all props needed by the pipeline such as kafka topics, twitter developer API
 credentials...
 
    
@@ -82,69 +82,69 @@ IV. Run the bash script ```kafka-stream-to-cassandra.sh``` to write the processe
 the data saved in Cassandra.
 
 ### Project Content
-
-    ├── Covid19ToKafkaProducer                    # Airflow DAG for COVID-19 batch data
-    ├── KafkaConsumer                             # KakfaConsumer application for tweet stream and COVID-19 data sources
-    ├── KafkaSparkUnit                            # Spark extract, transform and load application 
-    ├── TwitterStreamToKafkaProducer              # Twitter Stream to Kafka application
-    ├── create-database-table.sql                 # SQL script for create the database and tables in mySQL
-    ├── start-kafkaConsumer.sh                    # Bash script to run scala application KafkaConsumer
-    ├── start-spark-kafka-unit.sh                 # Bash script to submit spark application KafkaSparkUnit
-    ├── start-tweetStream-to-kafkaProducer.sh     # Bash script to run scala application KafkaConsumer
-    ├── start-vmstats-with-flume.sh               # Bash script to run flume for vmstat data stream
-    ├── vmstat_flume_kafka.conf                   # Flume agent configuration file
-    ├── jars                                      # Jar folder for KafkaSparkUnit app including all dependencies
-    ├── kafka-spark-unit.properties               # Properties for data pipeline and the pipeline selection
-
-### Structure Data Samples
-**NOTE**: Sensitive Data Is Hidden Or Modified In The Following Samples. 
-
-* Pipeline: vmstat -> flume -> kafka -> spark structured streaming -> mySQL
-
- 
-    | row_id | topic | time                | r    | b    | swpd | free   | buff | cache   | si   | so   | bi   | bo   | in_val | cs   | us   | sy   | id   | wa   | st   |
-    |--------|-------|---------------------|------|------|------|--------|------|---------|------|------|------|------|--------|------|------|------|------|------|------|
-    |      1 | exec  | 2021-02-02 10:43:02 | 1    | 2    | 3    | 4      | 5    | 6       | 7    | 8    | 9    | 10   | 11     | 12   | 13   | 14   | 15   | 16   | 17   |
-    |      2 | exec  | 2021-02-02 10:56:47 | 0    | 0    | 8    | 301620 | 1144 | 8950572 | 0    | 0    | 0    | 35   | 1706   | 1672 | 6    | 2    | 92   | 0    | 0    |
-    |      3 | exec  | 2021-02-02 10:56:47 | 0    | 0    | 8    | 301176 | 1144 | 8950576 | 0    | 0    | 0    | 0    | 1469   | 1540 | 4    | 2    | 95   | 0    | 0    |
-    |      4 | exec  | 2021-02-02 10:56:47 | 1    | 0    | 8    | 247564 | 1144 | 8950612 | 0    | 0    | 0    | 0    | 3564   | 3661 | 15   | 4    | 81   | 0    | 0    |
-    |      5 | exec  | 2021-02-02 10:56:50 | 2    | 0    | 8    | 170608 | 1144 | 8919396 | 0    | 0    | 0    | 0    | 5363   | 4051 | 35   | 5    | 60   | 0    | 0    |
-   
-
-* Pipeline: tweet stream -> kafka -> spark structured streaming -> mySQL
-
-
-    | row_id | tweet_time                   | user_id  | full_name           | tweet_id  | tweet_source        | is_truncated | is_rt | tweet_text                         |
-    |--------|------------------------------|----------|---------------------|-----------|---------------------|--------------|-------|------------------------------------|
-    |      1 | Fri Feb 12 20:04:55 EST 2021 |   ...    |      ...            |   ...     | Twitter for iPhone  | false        | false | just ordered ... 🥰 ...       ...  |
-    |      2 | Fri Feb 12 20:04:55 EST 2021 |   ...    | chrisy 🌼@pptyaacy  |   ...     | Twitter for Android | false        | false | @bluexjjkyu okeyyy,           ...  |
-    |      3 | Fri Feb 12 20:04:55 EST 2021 |   ...    |      ...            |   ...     | Twitter for iPhone  | false        | false | RT @uhprome: I really         ...  |
-    |      4 | Fri Feb 12 20:04:55 EST 2021 |   ...    |      ...            |  ...      | Twitter for iPhone  | false        | false | RT @thesecret: Every          ...  |
-    |      5 | Fri Feb 12 20:04:55 EST 2021 |   ...    |      ...            |   ...     | Twitter for iPhone  | false        | false | RT @ferbIatin: the            ...  |
-
-* Pipeline: tweet stream -> kafka -> spark structred streaming -> mongoDB
-  
-
-      {
-        "_id" : ObjectId("60271b6f6a142c2014fdc296"),
-        "tweet_time" : "Fri Feb 12 19:20:53 EST 2021",
-        "user_id" : "...",
-        "full_name" : "...",
-        "tweet_id" : "...",
-        "tweet_source" : "Twitter for iPhone",
-        "is_truncated" : "false",
-        "is_rt" : "false",
-        "tweet_text" : "First Time She Put Dat Pussy On Me I Put Her In A Benz 🤞🏽"
-      }
-
-* Pipeline: tweet stream -> kafka + Schema Registry -> Confluent Kafka Avro Consumer 
     
-     
-     {"tweetdate":"Sat Feb 20 19:23:25 EST 2021","userID":{"long":...},"fullName":{"string":"Aphrodi\uD83D\uD..."},"tweetID":{"long":...},"tweetSource":{"string":"Twitter for iPhone"},"isTruncated":{"boolean":false},"isRT":{"boolean":false},"tweet":{"string":"RT @deeptrusts: I want someo ..."}}
-     
-     {"tweetdate":"Sat Feb 20 19:23:25 EST 2021","userID":{"long":...},"fullName":{"string":"Ro ♒\uD83D\uDC96..."},"tweetID":{"long":...},"tweetSource":{"string":"Twitter for iPhone"},"isTruncated":{"boolean":false},"isRT":{"boolean":false},"tweet":{"string":"RT @feelxpain: i fucking fac ..."}}
-     
-     {"tweetdate":"Sat Feb 20 19:23:25 EST 2021","userID":{"long":...},"fullName":{"string":"nico._.macedo@ni..."},"tweetID":{"long":...},"tweetSource":{"string":"Twitter for Android"},"isTruncated":{"boolean":false},"isRT":{"boolean":false},"tweet":{"string":"@mukti_alin NFR lbinoBateon ..."}}
+    ├── Jars                                            # an folder for app jars
+    ├── KafkaStreamProcessing                           # app folder for kafka stream processing
+    ├── kafka-stream-processing.sh                      # bash to start the kafka stream processing
+    ├── KafkaStreamToCassandra                          # app folder for kafka stream to cassandra
+    ├── kafka-stream-to-cassandra.sh                    # bash to start writing stream to cassandra
+    ├── start-tweet-to-kafka-producer.sh                # bash to start twitter streaming to kafka producers
+    ├── tweet-message-trending-pipeline.properties      # pipeline config file
+    └── twitterStreamToKafkaProducer                    # app folder for twitter stream to kafka producer
+
+### Data Samples in Storage and Console
+**NOTE**: Sensitive Data Is Hidden by ```...``` Or Modified with ```**``` In The Following Samples. 
+
+* pipeline: tweet stream -> kafka producer with avro schema -> app console
+* kafka producer runs in async mode so every ack from the broker will generate a callback for the message transfer status and printed as follows. ```....message is unrelated and disposed....``` means
+the tweet messages from API has not any related keywords defined in ```tweet-message-trending-pipeline.properties```, but the related messages are pulished to the cluster.  
+
+
+    |....message is unrelated and disposed....  |
+    |....message is unrelated and disposed....  |
+    |record published to [partition:2,offset:33]|
+    |record published to [partition:1,offset:60]|
+
+
+
+* Pipeline: tweet stream -> kafka producer with avro schema -> [kafka connect, schema registry] -> hdfs
+* To read avro file in hdfs by spark: ```spark.read.format("avro").load("hdfs://localhost:9000/topics/streamToHdfs/partition=1/*.avro").show(3)```
+
+    
+
+    |    tweetCreatedDate|            tweetID|           tweetText|        tweetUserID|       tweetFullName|tweetRelatedTopic|
+    |--------------------|-------------------|--------------------|-------------------|--------------------|-----------------|
+    |Thu Mar 18 10:55:...|        ...        |RT @TechnicalGuru...|                ...|   Am*d@amid********|               5G|
+    |Thu Mar 18 11:00:...|        ...        |In both public an...|                ...|                 ...|    CyberSecurity|
+    |Thu Mar 18 11:00:...|13*2563688117*684*4|$KEYS 📰 Keysight.. |                ...|                 ...|               5G|
+ 
+
+
+* Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> kafka console
+
+
+    |TIMESTAMP:Thu Mar 25 11:29:44 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:1                      |
+    |TIMESTAMP:Thu Mar 25 11:29:47 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:2                      |
+    |TIMESTAMP:Thu Mar 25 11:29:47 EDT 2021,TOPIC:processedStream,KEY:[Artificial Intelligence@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:1 |
+    |TIMESTAMP:Thu Mar 25 11:29:51 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:3                      |
+    |TIMESTAMP:Thu Mar 25 11:29:57 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:4                      |
+    |TIMESTAMP:Thu Mar 25 11:29:57 EDT 2021,TOPIC:processedStream,KEY:[CyberSecurity@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:1           |
+
+
+
+* Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> cassandra
+* the CQL table is created with ```tweet_topic``` as primary key/partition key, so the count is automatically updated under the fixed window size until next hopping window starts. 
+
+
+    |tweet_topic                                                         | kafka_topic     | local_timestamp                 | tweet_topic_count |
+    |--------------------------------------------------------------------+-----------------+---------------------------------+-------------------|
+    |[CyberSecurity@2021-03-24T15:34:00Z-2021-03-24T15:36:00Z]           | processedStream | 2021-03-24 15:34:15.997000+0000 |                 2 |
+    |[5G@2021-03-24T15:26:00Z-2021-03-24T15:28:00Z]                      | processedStream | 2021-03-24 15:27:41.766000+0000 |                 1 |
+    |[CyberSecurity@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z]           | processedStream | 2021-03-25 15:29:57.712000+0000 |                 1 |
+    |[Artificial Intelligence@2021-03-24T15:34:00Z-2021-03-24T15:36:00Z] | processedStream | 2021-03-24 15:34:12.470000+0000 |                 1 |
+    |[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z]                      | processedStream | 2021-03-25 15:29:57.242000+0000 |                 4 |
+    |[5G@2021-03-24T15:34:00Z-2021-03-24T15:36:00Z]                      | processedStream | 2021-03-24 15:34:29.088000+0000 |                 6 |
+    |[Artificial Intelligence@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z] | processedStream | 2021-03-25 15:29:47.046000+0000 |                 1 |
 
 
 ### Contact
