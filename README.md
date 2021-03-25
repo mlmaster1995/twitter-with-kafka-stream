@@ -1,17 +1,6 @@
 # Tweet Topic Tracking Pipeline with Lambda Architecture
 ![Hex.pm](https://img.shields.io/hexpm/l/plug?logo=Apache&logoColor=%23ff0000&style=flat-square)
 
-### Table of Contents
-* [About the Project](#about-the-project)
-* [Built With](#built-with)
-* [Pipelines](#pipelines)  
-  * [Pipeline Structure](#pipeline-structure)
-  * [Pipeline Layers](#pipeline-laysers)
-  * [Pipeline Use](#use-pipeline)
-* [Project Content](#project-content)
-* [Structure Data Samples](#structure-data-samples)
-* [Contact](#contact)
-
 ### About The Project
 This is a small project to leverage the benefits of Apache Kafka realizing the stateful processing and the direct storage via ```Kafka Stream```, ```Kafka Connect``` 
 and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform Load) Data Pipeline Collection OOP](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated) project, this project 
@@ -33,37 +22,27 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
 ![tweet-stream-kafka](https://user-images.githubusercontent.com/55723894/112486281-1ee39c80-8d52-11eb-80ce-c51c2b9ad798.jpeg)
 
 #### Pipeline Layers:
-* Data source Layer: the tweet data is extracted via the Twitter stream API with the specific configs for the language and keywords tracking. The default language is ```english``` and 
-  default keywords are ```5G,IoB,DevSecOps, Intelligent Process Automation,Tactile Virtual Reality,Big Data Analytics,CyberSecurity, Artificial Intelligence```. 
+* Data source Layer: the tweet data is extracted via the Twitter stream API with the specific configs for the language and keywords tracking. The default language is ```english``` and default keywords are ```5G,IoB,DevSecOps, Intelligent Process Automation,Tactile Virtual Reality,Big Data Analytics,CyberSecurity, Artificial Intelligence```. 
   
 
-* Batch Layer: the kafka cluster redirects messages based on the topics into Kafka Connect for HDFS storage and Kafka Stream for the stateful processing. The HDFS stores the original data with avro format which
-  could be fetched via Spark SQL or Spark Structured API for batch process in the serving layer. 
+* Batch Layer: the kafka cluster redirects messages based on the topics into Kafka Connect for HDFS storage and Kafka Stream for the stateful processing. The HDFS stores the original data with avro format which could be fetched via Spark SQL or Spark Structured API for batch process in the serving layer. 
   
 
-* Speed Layer: the stateful process is using a hopping window with custom-defined window size, default at 2min to aggregate the messages with related keywords into a ```related topic count``` which could reflect
-the popularity of the trending technology in the tweet. The processed data is saved into Cassandra database which could be extracted and processed in the servering layer.
+* Speed Layer: the stateful process is using a hopping window with custom-defined window size, default at 2min to aggregate the messages with related keywords into a ```related topic count``` which could reflect the popularity of the trending technology in the tweet. The processed data is saved into Cassandra database which could be extracted and processed in the servering layer.
   
 
 * Serving Layer: Not included in this project repo.
 
 #### Pipeline Use:
-**NOTE**: to compile and generate jars of pipeline component, go to the app folder run ```mvn clean install``` for the compile and jar generation. 
+**NOTE**: to compile and generate jars, run ```mvn clean install``` in the app folder. 
 
-* Set up the pipeline properties in the file ```tweet-message-trending-pipeline.properties``` and this file includes all props needed by the pipeline such as kafka topics, twitter developer API
-credentials...
+* Set up the pipeline properties in the file ```tweet-message-trending-pipeline.properties```.
 
-   
-* Run the bash script ```start-tweet-to-kafka-producer.sh``` to start tweet streaming into the kafka producer, and the producer console will show the message published status asynchronously.
-   This process writes data into two producers. If the kafka connect is configured properly, the avro files will be automatically saved in HDFS within the path as ```/topics/streamToHdfs/...```.
-   The kafka connect is tested in the VM with the standalone config, and the config sample files & drivers are explained in ```simpleKafkaConnectConfig``` folder. 
- 
-  
+* Run the bash script ```start-tweet-to-kafka-producer.sh``` to start tweet streaming into the kafka producer. If the kafka connect is configured properly, the avro files will be automatically saved in HDFS within the path as ```/topics/streamToHdfs/...```.
+    
 * Run the bash script ```kafka-stream-processing.sh``` to start the kafka streaming process.
 
-
-* Run the bash script ```kafka-stream-to-cassandra.sh``` to write the processed stream into Cassandra database. The consumer console will show the processed messages but it's a minor different from 
-the data saved in Cassandra.
+* Run the bash script ```kafka-stream-to-cassandra.sh``` to write the processed stream into Cassandra database.
 
 ### Project Content
     
@@ -81,7 +60,7 @@ the data saved in Cassandra.
 
 * pipeline: tweet stream -> kafka producer with avro schema -> app console
 * kafka producer runs in async mode so every ack from the broker will generate a callback for the message transfer status and printed as follows.
-* ```....message is unrelated and disposed....``` means the tweet messages from API has not any related keywords defined in ```tweet-message-trending-pipeline.properties```, but the related messages are pulished to the cluster.  
+* tweet messages from API wihotu any related keywords will be disposed, and the related messages are pulished to the cluster.  
 
 
 
