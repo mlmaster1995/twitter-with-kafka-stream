@@ -28,7 +28,7 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
 * Batch Layer: the kafka cluster redirects messages based on the topics into Kafka Connect for HDFS storage and Kafka Stream for the stateful processing. The HDFS stores the original data with ```avro format``` which could be fetched via Spark SQL or Spark Structured API for batch process in the serving layer. 
   
 
-* Speed Layer: the stateful process is using a hopping window with custom-defined window size, default at 2min to aggregate the messages with related keywords into a ```related topic count``` which could reflect the popularity of the trending technology in the tweet. The processed data is saved into Cassandra database which could be extracted and processed in the servering layer.
+* Speed Layer: the stateful process is using a hopping window with custom-defined window size, default at 2min to aggregate the messages with related keywords into a ```related topic count``` which could reflect the popularity of the trending technology mentioned in the tweet. The processed data is saved into Cassandra database which could be extracted and processed in the servering layer.
   
 
 * Serving Layer: Not included in this project repo.
