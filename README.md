@@ -58,7 +58,7 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
 ### Data Samples in Storage and Console
 **NOTE**: Sensitive Data Is Hidden by ```...``` Or Modified with ```**``` In The Following Samples. 
 
-* pipeline: tweet stream -> kafka producer with avro schema -> app console
+* pipeline: ```tweet stream -> kafka producer with avro schema -> app console```
 * kafka producer runs in async mode so every ack from the broker will generate a callback for the message transfer status and printed as follows.
 * tweet messages from API wihotu any related keywords will be disposed, and the related messages are pulished to the cluster.  
 
@@ -73,7 +73,7 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
 
 
 
-* Pipeline: tweet stream -> kafka producer with avro schema -> [kafka connect, schema registry] -> hdfs
+* Pipeline: ```tweet stream -> kafka producer with avro schema -> [kafka connect, schema registry] -> hdfs```
 * To read avro file in hdfs by spark: ```spark.read.format("avro").load("hdfs://localhost:9000/topics/streamToHdfs/partition=1/*.avro").show(3)```
 
     
@@ -86,7 +86,7 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
  
 
 
-* Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> console
+* Pipeline: ```tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> console```
 
 
 
@@ -101,7 +101,7 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
 
 
 
-* Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> cassandra
+* Pipeline: ```tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> cassandra```
 * the CQL table is created with ```tweet_topic``` as primary key/partition key, so the count is automatically updated under the fixed window size until next hopping window starts. 
 
 
