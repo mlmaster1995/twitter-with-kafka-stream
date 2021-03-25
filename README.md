@@ -7,7 +7,7 @@
 * [Pipelines](#pipelines)  
   * [Pipeline Structure](#pipeline-structure)
   * [Pipeline Layers](#pipeline-laysers)
-  * [Use Pipeline](#use-pipeline)
+  * [Pipeline Use](#use-pipeline)
 * [Project Content](#project-content)
 * [Structure Data Samples](#structure-data-samples)
 * [Contact](#contact)
@@ -26,13 +26,14 @@ III. The batch layer uses ```Kafka HDFS Connect``` and ```Confluent Schema Regis
   is processed based on the user-defined topics with ```Json Schema``` via ```Kafka Stream``` saving the data into ```Cassandra database```. 
   
 
-VI. The 2nd upgrade comparing to the [previous project](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated), this project is developed as an OOP in Java and 
+IV. The 2nd upgrade comparing to the [previous project](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated), this project is developed as an OOP in Java and 
 the compiled jar files of different component of the pipeline are generated. All properties related to the pipeline could be configured via a property file and it's easy to reuse the pipeline
 in any configured big data environment. 
 
-VII. This project is developed and tested in the self-configured VM with related technologies as [Built With](#built-with). 
+V. This project is developed and tested in the self-configured VM with related technologies as [Built With](#built-with). 
 
 ### Built With
+* [JDK 8](https://www.oracle.com/ca-en/java/technologies/javase/javase-jdk8-downloads.html)
 * [Apache Kafka 2.7.0](https://kafka.apache.org/0102/documentation.html)
 * [Apache Hadoop 2.7.7](https://hadoop.apache.org/)
 * [Confluent Schema Registry (Community Platform 6.1.0)](https://github.com/confluentinc/schema-registry)
@@ -62,23 +63,23 @@ the popularity of the trending technology in the tweet. The processed data is sa
 
 * Serving Layer: Not included in this project repo.
 
-#### Use Pipeline:
-1. "vmstat stream" is managed by Flume. Check and run ```./start-vmstats-with-flume.sh``` to stream the data and ingest into kafka producer.
+#### Pipeline Use:
+**NOTE**: to compile and generate jars of pipeline component, go to the app folder run ```mvn clean install``` for the compile and jar generation. 
+
+I. Set up the pipeline properties in the file ```tweet-message-trending-pipeline.properties``` and this file includes all props needed by the pipeline such as kafka topics, tweeter developer API
+credentials...
+
    
-2. "twitter stream" is managed by TwitterStreamToKafkaProducer app. To set up Twitter api credentials or modify kafka producer props, check ```ApplicationProperties.scala``` in the main folder
-in the application folder and then run ```sbt assembly``` to generate the fat jar file ```Twitter_Stream_Source-assembly-0.1.jar```. Finally run ```./start-tweetStream-to-kafkaProducer.sh``` in 
-the terminal to stream the data and ingest into kafka producer.
+II. Run the bash script ```start-tweet-to-kafka-producer.sh``` to start tweet streaming into the kafka producer, and the producer console will show the message published status asynchronously.
+   This process writes data into two producers. If the kafka connect is configured properly, the avro files will be automatically saved in HDFS within the path as ```/topics/streamToHdfs/...```.
+   The kafka connect is tested in the VM with the standalone config, and the config sample files & drivers are explained in ```simpleKafkaConnectConfig``` folder. 
+ 
+  
+III. Run the bash script ```kafka-stream-processing.sh``` to start the kafka streaming process.
 
-3. "covid19 batch data" is managed by Apache Airflow. Copy ```covid19_data_pipeline.py``` in the Covid19ToKafkaProducer to the dags folder and config ```http connection``` in the airflow webUI and
-then trigger the pipeline to collect data and ingest into kafka producer.
 
-4. "kafka consumer sink" is managed by KafkaConsumer app. To modify kafka consumer props, check ```ApplicationProperties.scala``` in the main folder in the application folder and run. 
-```sbt assembly``` to generate the fat jar file ```KafkaConsumer-assembly-0.1.jar``` and then run ```./start-kafkaConsumer.sh``` in the terminal to start the consumer.
-
-5. "spark data pipeline" is managed by the property file ```kafka-spark-unit.properties``` and it has all properties for all sinks (console, hdfs, hive table, kafka producer, mongoDB, mySQL) and 
-options to select which pipeline to run. All jars are in the ```jars folder``` including dependencies. After config the ```kafka-spark-unit.properties``` file, 
-run ```./start-spark-kafka-unit.sh ./kafka-spark-unit.properties``` to in the terminal to start the pipeline.
-   
+IV. Run the bash script ```kafka-stream-to-cassandra.sh``` to write the processed stream into Cassandra database. The consumer console will show the processed messages but it's a minor different from 
+the data saved in Cassandra.
 
 ### Project Content
 
