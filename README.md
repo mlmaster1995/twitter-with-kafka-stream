@@ -13,8 +13,8 @@
 * [Contact](#contact)
 
 ### About The Project
-I. Compared to Apache Spark, Apache kafka is suitable for the small data pipeline with fairly low latency and medium level throughput. This project is to leverage 
-  the benefits of this big data technology realizing the stateful processing and the direct storage via ```Kafka Stream```, ```Kafka Connect``` and ```Kafka Producer, Consumer API```. 
+I. This is a small project to leverage the benefits of Apache Kafka realizing the stateful processing and the direct storage via ```Kafka Stream```, ```Kafka Connect``` 
+and ```Kafka Producer, Consumer API```. 
   
 
 II. Different from [ETL(Extract Transform Load) Data Pipeline Collection OOP](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated) project, this project 
@@ -44,7 +44,6 @@ VII. This project is developed and tested in the self-configured VM with related
 #### Pipeline Structure:
 
 ![tweet-stream-kafka](https://user-images.githubusercontent.com/55723894/112486281-1ee39c80-8d52-11eb-80ce-c51c2b9ad798.jpeg)
-
 
 #### Pipeline Layers:
 * Data source Layer: the tweet data is extracted via the twitter stream API with the specific configs for the language and key words tracking, which could be set up in the 
