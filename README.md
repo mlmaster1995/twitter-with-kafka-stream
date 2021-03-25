@@ -18,8 +18,6 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
   is not a combination of multiple point-to-point data pipelines, BUT a tweet stream pipeline based on ```Lambda Architecture``` which includes the batch layer, and the real-time 
   stateful processing layer for further down-stream process in the serving layer.
 
-V. This project is developed and tested in the self-configured VM with related technologies as [Built With](#built-with). 
-
 ### Built With
 * [JDK 8](https://www.oracle.com/ca-en/java/technologies/javase/javase-jdk8-downloads.html)
 * [Apache Kafka 2.7.0](https://kafka.apache.org/0102/documentation.html)
@@ -35,18 +33,16 @@ V. This project is developed and tested in the self-configured VM with related t
 ![tweet-stream-kafka](https://user-images.githubusercontent.com/55723894/112486281-1ee39c80-8d52-11eb-80ce-c51c2b9ad798.jpeg)
 
 #### Pipeline Layers:
-* Data source Layer: the tweet data is extracted via the twitter stream API with the specific configs for the language and key words tracking, which could be set up in the 
-  ```tweet-message-trending-pipeline.properties```. The default langage is ```english``` and default keywords are the 2021 trending technologies including ```5G,IoB,DevSecOps,
-  Intelligent Process Automation,Tactile Virtual Reality,Big Data Analytics,CyberSecurity, Artificial Intelligence```. The tweet stream is ingested into two producers and messages 
-  are published to the kafka cluster with both Avro and Json schemas.
+* Data source Layer: the tweet data is extracted via the Twitter stream API with the specific configs for the language and keywords tracking. The default language is ```english``` and 
+  default keywords are ```5G,IoB,DevSecOps, Intelligent Process Automation,Tactile Virtual Reality,Big Data Analytics,CyberSecurity, Artificial Intelligence```. 
   
 
-* Batch Layer: the kafka cluster redirects messages based on the topics into Kakfa Connenct for HDFS storage and Kafka Stream for the stateful processing. The HDFS stores the original data with avro format which
-  could be fetched via Spark SQL or Spark Structured API for batch process in the serving layer (Not included in the repo). 
+* Batch Layer: the kafka cluster redirects messages based on the topics into Kafka Connect for HDFS storage and Kafka Stream for the stateful processing. The HDFS stores the original data with avro format which
+  could be fetched via Spark SQL or Spark Structured API for batch process in the serving layer. 
   
 
 * Speed Layer: the stateful process is using a hopping window with custom-defined window size, default at 2min to aggregate the messages with related keywords into a ```related topic count``` which could reflect
-the popularity of the trending technology in the tweet. The processed data is saved into Cassandra database which could be extracted and processed in the servering layer (Not included in the repo).
+the popularity of the trending technology in the tweet. The processed data is saved into Cassandra database which could be extracted and processed in the servering layer.
   
 
 * Serving Layer: Not included in this project repo.
@@ -54,19 +50,19 @@ the popularity of the trending technology in the tweet. The processed data is sa
 #### Pipeline Use:
 **NOTE**: to compile and generate jars of pipeline component, go to the app folder run ```mvn clean install``` for the compile and jar generation. 
 
-I. Set up the pipeline properties in the file ```tweet-message-trending-pipeline.properties``` and this file includes all props needed by the pipeline such as kafka topics, twitter developer API
+* Set up the pipeline properties in the file ```tweet-message-trending-pipeline.properties``` and this file includes all props needed by the pipeline such as kafka topics, twitter developer API
 credentials...
 
    
-II. Run the bash script ```start-tweet-to-kafka-producer.sh``` to start tweet streaming into the kafka producer, and the producer console will show the message published status asynchronously.
+* Run the bash script ```start-tweet-to-kafka-producer.sh``` to start tweet streaming into the kafka producer, and the producer console will show the message published status asynchronously.
    This process writes data into two producers. If the kafka connect is configured properly, the avro files will be automatically saved in HDFS within the path as ```/topics/streamToHdfs/...```.
    The kafka connect is tested in the VM with the standalone config, and the config sample files & drivers are explained in ```simpleKafkaConnectConfig``` folder. 
  
   
-III. Run the bash script ```kafka-stream-processing.sh``` to start the kafka streaming process.
+* Run the bash script ```kafka-stream-processing.sh``` to start the kafka streaming process.
 
 
-IV. Run the bash script ```kafka-stream-to-cassandra.sh``` to write the processed stream into Cassandra database. The consumer console will show the processed messages but it's a minor different from 
+* Run the bash script ```kafka-stream-to-cassandra.sh``` to write the processed stream into Cassandra database. The consumer console will show the processed messages but it's a minor different from 
 the data saved in Cassandra.
 
 ### Project Content
@@ -84,10 +80,12 @@ the data saved in Cassandra.
 **NOTE**: Sensitive Data Is Hidden by ```...``` Or Modified with ```**``` In The Following Samples. 
 
 * pipeline: tweet stream -> kafka producer with avro schema -> app console
-* kafka producer runs in async mode so every ack from the broker will generate a callback for the message transfer status and printed as follows. ```....message is unrelated and disposed....``` means
-the tweet messages from API has not any related keywords defined in ```tweet-message-trending-pipeline.properties```, but the related messages are pulished to the cluster.  
+* kafka producer runs in async mode so every ack from the broker will generate a callback for the message transfer status and printed as follows.
+* ```....message is unrelated and disposed....``` means the tweet messages from API has not any related keywords defined in ```tweet-message-trending-pipeline.properties```, but the related messages are pulished to the cluster.  
 
 
+
+    |     kafka producer console prints         |
     |-------------------------------------------|
     |....message is unrelated and disposed....  |
     |....message is unrelated and disposed....  |
@@ -109,9 +107,11 @@ the tweet messages from API has not any related keywords defined in ```tweet-mes
  
 
 
-* Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> kafka console
+* Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> console
 
 
+
+    |                                               kafka consumer console messages prints                                                        |
     |---------------------------------------------------------------------------------------------------------------------------------------------|
     |TIMESTAMP:Thu Mar 25 11:29:44 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:1                      |
     |TIMESTAMP:Thu Mar 25 11:29:47 EDT 2021,TOPIC:processedStream,KEY:[5G@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z],VALUE:2                      |
@@ -124,6 +124,7 @@ the tweet messages from API has not any related keywords defined in ```tweet-mes
 
 * Pipeline: tweet stream -> kafka producer with json schema -> kafka stream -> kafka consumer -> cassandra
 * the CQL table is created with ```tweet_topic``` as primary key/partition key, so the count is automatically updated under the fixed window size until next hopping window starts. 
+
 
 
     |tweet_topic                                                         | kafka_topic     | local_timestamp                 | tweet_topic_count |
