@@ -1,13 +1,13 @@
 # Tweet Topic Tracking Pipeline with Lambda Architecture
 ![Hex.pm](https://img.shields.io/hexpm/l/plug?logo=Apache&logoColor=%23ff0000&style=flat-square)
 
-### About The Project
+## About The Project
 This is a small project to leverage the benefits of Apache Kafka realizing the stateful processing and the direct storage via ```Kafka Stream```, ```Kafka Connect``` 
 and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform Load) Data Pipeline Collection OOP](https://github.com/mlmaster1995/Flume_Kafka_StructureStream_ELT_Updated) project, this project 
   is not a combination of multiple point-to-point data pipelines, BUT a tweet stream pipeline based on ```Lambda Architecture``` which includes the batch layer, and the real-time 
   stateful processing layer for further down-stream process in the serving layer.
 
-### Built With
+## Built With
 * [JDK 8](https://www.oracle.com/ca-en/java/technologies/javase/javase-jdk8-downloads.html)
 * [Apache Kafka 2.7.0](https://kafka.apache.org/0102/documentation.html)
 * [Apache Hadoop 2.7.7](https://hadoop.apache.org/)
@@ -15,7 +15,7 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
 * [Twitter4j 4.0.7](http://twitter4j.org/en/index.html)
 * [Cassandra 3.11](https://cassandra.apache.org/)
 
-### Pipelines
+## Pipelines
     
 #### Pipeline Structure:
 
@@ -55,7 +55,7 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
     ├── tweet-message-trending-pipeline.properties      # pipeline config file
     └── twitterStreamToKafkaProducer                    # app folder for twitter stream to kafka producer
 
-### Data Samples in Storage and Console
+## Data Samples in Storage and Console
 **NOTE**: Sensitive Data Is Hidden by ```...``` Or Modified with ```**``` In The Following Samples. 
 
 * pipeline: ```tweet stream -> kafka producer with avro schema -> app console```
@@ -117,5 +117,5 @@ and ```Kafka Producer & Consumer API```. Different from [ETL(Extract Transform L
     |[Artificial Intelligence@2021-03-25T15:28:00Z-2021-03-25T15:30:00Z] | processedStream | 2021-03-25 15:29:47.046000+0000 |                 1 |
 
 
-### Contact
+## Contact
 * C. Young: kyang3@lakeheadu.ca
